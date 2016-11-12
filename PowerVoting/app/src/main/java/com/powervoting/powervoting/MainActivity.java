@@ -32,6 +32,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnItemLongClick;
 import butterknife.OnLongClick;
 
 public class MainActivity extends AppCompatActivity {
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d("Testing", dataSnapshot.getValue().toString());
                 Submission submission = dataSnapshot.getValue(Submission.class);
                 submission.setKey(dataSnapshot.getKey());
 
@@ -72,7 +74,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                Log.d("onChildChanged", dataSnapshot.getValue().toString());
+                Submission submission = dataSnapshot.getValue(Submission.class);
+                submission.setKey(dataSnapshot.getKey());
+                adapter.updateSubmission(submission);
             }
 
             @Override
@@ -93,20 +98,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @OnLongClick(R.id.submissions_lv)
-    public void vote(int position) {
+    @OnItemLongClick(R.id.submissions_lv)
+    public boolean vote(int position) {
         Calendar current = Calendar.getInstance();
         Query query = ref.child("day").child("" + current.get(Calendar.YEAR) + "-" +
                 current.get(Calendar.MONTH) + "-" + current.get(Calendar.DAY_OF_MONTH));
         Submission submission = (Submission) adapter.getItem(position);
 
         DatabaseReference incrementRef = ref.child("day").child("" + current.get(Calendar.YEAR) + "-" +
-                current.get(Calendar.MONTH) + "-" + current.get(Calendar.DAY_OF_MONTH));
+                current.get(Calendar.MONTH) + "-" + current.get(Calendar.DAY_OF_MONTH)).child
+                (submission.getKey()).child("votes");
 
         incrementRef.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
-                Submission incremenetSubmission = mutableData.getValue()
+                int votes = mutableData.getValue(Integer.class);
+
+                mutableData.setValue(votes + 1);
+
+                return Transaction.success(mutableData);
             }
 
             @Override
@@ -114,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        return true;
     }
 
     @OnClick(R.id.add_fab)
@@ -133,6 +144,16 @@ public class MainActivity extends AppCompatActivity {
         public void addSubmission(Submission submission) {
             list.add(submission);
             notifyDataSetChanged();
+        }
+
+        public void updateSubmission(Submission submission) {
+            for (int i = 0; i < getCount(); i++) {
+                if (list.get(i).getKey().equals(submission.getKey())) {
+                    list.set(i, submission);
+                    notifyDataSetChanged();
+                    return;
+                }
+            }
         }
 
         @Override
