@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "961338219161",
+    "firebase_url": "https://voterapp-dac9c.firebaseio.com",
+    "project_id": "voterapp-dac9c",
+    "storage_bucket": "voterapp-dac9c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:961338219161:android:cbee8e846f8e800b",
+        "android_client_info": {
+          "package_name": "com.powervoting.powervoting"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "961338219161-j8g37vphgtcnpfdutu87kf2km2ucr4fb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9ttqr__OSEZ3RaTM7Z8yS5hublR__6UQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
